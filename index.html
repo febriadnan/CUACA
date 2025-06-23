@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Cek Cuaca Kota</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #cbe7ff, #f0f8ff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #007acc;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007acc;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .weather-icon {
+      width: 60px;
+      margin: 10px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Cek Cuaca Kota</h1>
+
+  <div class="container">
+    <select id="city">
+      <option value="Jakarta">Jakarta</option>
+      <option value="Bandung">Bandung</option>
+      <option value="Bogor">Bogor</option>
+      <option value="Depok">Depok</option>
+    </select>
+    <button onclick="cekCuaca()">Cek Cuaca</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function cekCuaca() {
+      const city = document.getElementById("city").value;
+      const apiKey = "8b517591d2da73977265cd13120975fa"; // Ganti dengan API key kamu
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},ID&appid=${apiKey}&units=metric&lang=id`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.cod === 200) {
+          const suhu = data.main.temp;
+          const cuaca = data.weather[0].description;
+          const icon = data.weather[0].icon;
+
+          document.getElementById("result").innerHTML = `
+            <img class="weather-icon" src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Cuaca">
+            <div><strong>${city}</strong></div>
+            <div>Cuaca: <strong>${cuaca}</strong></div>
+            <div>Suhu: <strong>${suhu}°C</strong></div>
+          `;
+        } else {
+          document.getElementById("result").innerHTML = "day!";
+        }
+      } catch (error) {
+        document.getElementById("result").innerHTML = "Gagal mengambil data cuaca.";
+        console.error(error);
+      }
+    }
+  </script>
+
+</body>
+</html>
